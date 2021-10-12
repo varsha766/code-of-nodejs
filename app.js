@@ -1,56 +1,27 @@
-const express= require('express');
-const mongoose=require('mongoose');
-const Details = require('./model/details');
+//import {express} from 'package.json';
+const express= require('express')
+//import {node-fetch} from 'package.json';
+const fetch= require('node-fetch');
 const app= express();
 
-//to enable parsing of JSON object in the body of request
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+var router= express.Router();
 
-
-
-const dBURI=
- 'mongodb+srv://nodetest:varsha03@nodetest.dsj9j.mongodb.net/detail?retryWrites=true&w=majority'
-
-mongoose.connect(dBURI)
- .then((result)=>{});//console.log(result));
-// adding details in the database
-
-app.get('/details', async (req,res)=>{
-    await
-    mongoose.connect(dBURI)
- .then((result)=>{
-     console.log("Connected Successfully");
-     
- });
-    Details.find({},(err,doc)=>{
-        console.log()
-        console.log(doc);
-        res.json(doc);
-     mongoose.connection.close();
-     console.log("Disconnected");
-    });
+app.listen(3000, () =>{
+    console.log('starting server at port 3000');
 });
+// to enable parsing of json object in the body of request
+app. use(express.json());
+app.use(express.urlencoded({extended:true}));
 
+//API to call another API i.e third party API
 
+app.get('/project', async(req,res)=>{
 
-app.post('/add-detail',async (req, res)=>{
+//third party URL
+const api_url= 'https://api.fyre.hypersign.id/api/v1/project/demo-event-001?isPublic=true';
+const fetch_response= await fetch(api_url);
+const result= await fetch_response.json();
+res.json(result);
 
-await 
-mongoose.connect(dBURI).then((result)=>  //const detail= (req.body);
-    {
-    console.log("connected successfully");
-    });
-    const detail= new Details(req.body);
-    await detail.save().then((result)=>{
-    });
-      res.send(detail);
-      mongoose.connection.close();
-      console.log("Disconnected");
 });
-
-
-app.listen(3000,()=>{
-    //console.log("http://localhost:3000/details");
-});
-    
+ 
